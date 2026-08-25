@@ -39,10 +39,6 @@ TXGameTrak : TXModuleBase {
 		^super.new.init(argInstName);
 	}
 
-<<<<<<< HEAD
-	init {arg argInstName;
-		data = ();
-=======
 	*openAllGameTraks {
 		var dictOpenDevices, arrOpenGameTrakPaths, dictFoundDevices;
 		arrOpenGameTrakPaths = [];
@@ -83,7 +79,6 @@ TXGameTrak : TXModuleBase {
 	init {arg argInstName;
 		data = ();
 		data.runStatus = true;
->>>>>>> Version089Changes
 		data.leftAngleXMin = 0;
 		data.leftAngleXMax = 1;
 		data.leftAngleYMin = 0;
@@ -116,10 +111,7 @@ TXGameTrak : TXModuleBase {
 		displayOption = "showCalibration";
 		arrSynthArgSpecs = [
 			["out", 0, 0], // Dummy
-<<<<<<< HEAD
-=======
 			["deviceNo", 0, 0],
->>>>>>> Version089Changes
 			["leftAngleXMin", 0, 0],
 			["leftAngleXMax", 1, 0],
 			["leftAngleYMin", 0, 0],
@@ -149,37 +141,6 @@ TXGameTrak : TXModuleBase {
 		];
 		this.buildGuiSpecArray;
 		arrActionSpecs = this.buildActionSpecs([
-<<<<<<< HEAD
-
-			// ["TXCheckBox", "Calibrate", "calibrate",
-			// {this.setCalibration; }, 80, 20],
-			// ["TXCheckBox", "Use FootSwitch to Calibrate", "calibrateFS",
-			// {this.setCalibrationFS; }, 180, 20],
-			// ["SpacerLine", 4],
-			// ["TXRangeSlider", "L X", ControlSpec(0, 1), "leftAngleXMin", "leftAngleXMax",
-			// {this.updateMinMaxVal("leftAngleXMin", "leftAngleXMax")}],
-			// ["TXRangeSlider", "L Y", ControlSpec(0, 1), "leftAngleYMin", "leftAngleYMax",
-			// {this.updateMinMaxVal("leftAngleYMin", "leftAngleYMax")}],
-			// ["TXRangeSlider", "L Z", ControlSpec(0, 1), "leftExtendZMin", "leftExtendZMax",
-			// {this.updateMinMaxVal("leftExtendZMin", "leftExtendZMax")}],
-			// ["SpacerLine", 4],
-			// ["TXRangeSlider", "R X", ControlSpec(0, 1), "rightAngleXMin", "rightAngleXMax",
-			// {this.updateMinMaxVal("rightAngleXMin", "rightAngleXMax")}],
-			// ["TXRangeSlider", "R Y", ControlSpec(0, 1), "rightAngleYMin", "rightAngleYMax",
-			// {this.updateMinMaxVal("rightAngleYMin", "rightAngleYMax")}],
-			// ["TXRangeSlider", "R Z", ControlSpec(0, 1), "rightExtendZMin", "rightExtendZMax",
-			// {this.updateMinMaxVal("rightExtendZMin", "rightExtendZMax")}],
-			//
-			// TO BE REPLACED
-
-
-
-
-
-
-
-
-=======
 			["TXPopupAction", "Device no.", 8.collect({arg i; (i+1).asString;}), "deviceNo",
 				{ arg view; this.updateStatus; }, 140],
 			["TXRangeSlider", "Left Angle X", ControlSpec(0, 1), "leftAngleXMin", "leftAngleXMax",
@@ -206,7 +167,6 @@ TXGameTrak : TXModuleBase {
 				{this.updateMinMaxVal("rightPosYMin", "rightPosYMax")}],
 			["TXRangeSlider", "Right Pos Z", ControlSpec(0, 1), "rightPosZMin", "rightPosZMax",
 				{this.updateMinMaxVal("rightPosZMin", "rightPosZMax")}],
->>>>>>> Version089Changes
 		]);
 		data.deviceStatus = " Device Not Found";
 		//	use base class initialise
@@ -219,12 +179,6 @@ TXGameTrak : TXModuleBase {
 
 	buildGuiSpecArray {
 		guiSpecArray = [
-<<<<<<< HEAD
-			["TXStaticText", "Device status", {data.deviceStatus}, {arg view; deviceStatusView = view.textView}, 280],
-			["Spacer", 3],
-			["ActionButton", "Reconnect", { this.reconnect; }, 80, TXColor.white, TXColor.sysGuiCol2],
-			["Spacer", 30],
-=======
 			["TXPopupAction", "Device no.", 8.collect({arg i; (i+1).asString;}), "deviceNo",
 				{ arg view; this.updateStatus; }, 140],
 			["Spacer", 4],
@@ -232,7 +186,6 @@ TXGameTrak : TXModuleBase {
 			["Spacer", 20],
 			["ActionButton", "Reconnect", { this.reconnect; }, 80, TXColor.white, TXColor.sysGuiCol2],
 			["Spacer", 20],
->>>>>>> Version089Changes
 			["ActionButton", "Reset All Outputs", {this.resetAllOutputs;}, 120, TXColour.white, TXColour.sysDeleteCol],
 			["SpacerLine", 6],
 			["ActionButton", "Active Ranges", {displayOption = "showCalibration";
@@ -380,16 +333,6 @@ TXGameTrak : TXModuleBase {
 	}	// end of performActions
 
 
-<<<<<<< HEAD
-	// HID methods
-
-	hidActivate {
-		// open device
-		this.openGameTrak;
-		// if open
-		if (classData.gameTrak.notNil and: {classData.gameTrak.isOpen}, {
-			classData.gameTrak.elements.at(0).action = { |value,element|
-=======
 	//////////////////////////
 
 	// HID methods
@@ -399,7 +342,6 @@ TXGameTrak : TXModuleBase {
 		if ((data.runStatus == true) and: {deviceIndex == this.getSynthArgSpec("deviceNo")}, {
 			case
 			{ parameter == \leftAngleX }   {
->>>>>>> Version089Changes
 				var outVal;
 				// X:
 				data.leftAngleX = value;
@@ -411,13 +353,8 @@ TXGameTrak : TXModuleBase {
 					outVal = value.linlin(data.leftAngleXMin, data.leftAngleXMax, 0, 1);
 					outBus.set(outVal);
 				});
-<<<<<<< HEAD
-			};
-			classData.gameTrak.elements.at(1).action = { |value,element|
-=======
 			}
 			{ parameter == \leftAngleY }   {
->>>>>>> Version089Changes
 				var outVal;
 				// Y:
 				data.leftAngleY = value;
@@ -429,13 +366,8 @@ TXGameTrak : TXModuleBase {
 					outVal = value.linlin(data.leftAngleYMin, data.leftAngleYMax, 0, 1);
 					outBus.setAt(1, outVal);
 				});
-<<<<<<< HEAD
-			};
-			classData.gameTrak.elements.at(2).action = { |value,element|
-=======
 			}
 			{ parameter == \leftExtendZ }   {
->>>>>>> Version089Changes
 				var outVal;
 				// Z: - inverted
 				value = 1 - value; // invert
@@ -448,13 +380,8 @@ TXGameTrak : TXModuleBase {
 					outVal = value.linlin(data.leftExtendZMin, data.leftExtendZMax, 0, 1);
 					outBus.setAt(2, outVal);
 				});
-<<<<<<< HEAD
-			};
-			classData.gameTrak.elements.at(3).action = { |value,element|
-=======
 			}
 			{ parameter == \rightAngleX }   {
->>>>>>> Version089Changes
 				var outVal;
 				// Rx:
 				data.rightAngleX = value;
@@ -466,13 +393,8 @@ TXGameTrak : TXModuleBase {
 					outVal = value.linlin(data.rightAngleXMin, data.rightAngleXMax, 0, 1);
 					outBus.setAt(3, outVal);
 				});
-<<<<<<< HEAD
-			};
-			classData.gameTrak.elements.at(4).action = { |value,element|
-=======
 			}
 			{ parameter == \rightAngleY }   {
->>>>>>> Version089Changes
 				var outVal;
 				// Ry:
 				data.rightAngleY = value;
@@ -484,13 +406,8 @@ TXGameTrak : TXModuleBase {
 					outVal = value.linlin(data.rightAngleYMin, data.rightAngleYMax, 0, 1);
 					outBus.setAt(4, outVal);
 				});
-<<<<<<< HEAD
-			};
-			classData.gameTrak.elements.at(5).action = { |value,element|
-=======
 			}
 			{ parameter == \rightExtendZ }   {
->>>>>>> Version089Changes
 				var outVal;
 				// Rz: - inverted
 				value = 1 - value; // invert
@@ -503,13 +420,8 @@ TXGameTrak : TXModuleBase {
 					outVal = value.linlin(data.rightExtendZMin, data.rightExtendZMax, 0, 1);
 					outBus.setAt(5, outVal);
 				});
-<<<<<<< HEAD
-			};
-			classData.gameTrak.elements.at(6).action = { |value,element|
-=======
 			}
 			{ parameter == \footSwitch }   {
->>>>>>> Version089Changes
 				// b1:
 				data.footSwitch = value;
 				if ( outBus.class == Bus, {
@@ -521,52 +433,7 @@ TXGameTrak : TXModuleBase {
 					this.performActions('up');
 				});
 			};
-<<<<<<< HEAD
-		});
-	}
 
-	openGameTrak {
-		var dictOpenDevices, dictFoundDevices;
-		if (classData.gameTrak.isNil or: {classData.gameTrak.isOpen.not}, {
-			classData.gameTrak = nil;
-			HID.findAvailable;
-			//HID.postAvailable;
-			// check if open device found
-			dictOpenDevices = HID.openDevices;
-			dictOpenDevices.do({arg item, i;
-				if ((item.info.vendorID == 5303) and: (item.info.productID == 2434), {
-					classData.gameTrak = item;
-				});
-			});
-			if (classData.gameTrak.isNil , {
-				dictFoundDevices = HID.findBy(5303, 2434);
-				if (dictFoundDevices.size > 0, {
-					"TX: Opening Gametrak... ".postln;
-					classData.gameTrak = HID.open(5303, 2434); // Gametrak
-					//("Gametrak.isOpen  " ++ h.isOpen).postln;
-				});
-			});
-		});
-		if (classData.gameTrak.notNil and: {classData.gameTrak.isOpen}, {
-			data.deviceStatus = " GameTrak Connected";
-		}, {
-			data.deviceStatus = " GameTrak Not Found";
-		});
-	}
-
-	hidDeactivate {
-		//if (classData.gameTrak.notNil and: {classData.gameTrak.isOpen}, {
-		if (classData.gameTrak.notNil, {
-			classData.gameTrak.elements.at(0).action = {};
-			classData.gameTrak.elements.at(1).action = {};
-			classData.gameTrak.elements.at(2).action = {};
-			classData.gameTrak.elements.at(3).action = {};
-			classData.gameTrak.elements.at(4).action = {};
-			classData.gameTrak.elements.at(5).action = {};
-			classData.gameTrak.elements.at(6).action = {};
-=======
-
->>>>>>> Version089Changes
 		});
 	}
 
@@ -574,14 +441,6 @@ TXGameTrak : TXModuleBase {
 		data.deviceStatus = " Trying to Connect...";
 		system.showViewIfModDisplay(this);
 		{
-<<<<<<< HEAD
-			this.hidActivate;
-			2.wait;
-			system.showViewIfModDisplay(this);
-		}.fork;
-	}
-
-=======
 			this.class.openAllGameTraks;
 			0.5.wait;
 			this.updateStatus;
@@ -598,7 +457,6 @@ TXGameTrak : TXModuleBase {
 		system.showViewIfModDisplay(this);
 	}
 
->>>>>>> Version089Changes
 	updateMinMaxVal {arg minString, maxString;
 		data[minString.asSymbol] = this.getSynthArgSpec(minString);
 		data[maxString.asSymbol] = this.getSynthArgSpec(maxString);
@@ -812,15 +670,9 @@ TXGameTrak : TXModuleBase {
 
 	rebuildSynth { }	// override base class method
 
-<<<<<<< HEAD
-	runAction {this.reconnect}   //	override base class
-
-	pauseAction {this.hidDeactivate}   //	override base class
-=======
 	runAction {data.runStatus = true;}   //	override base class
 
 	pauseAction {data.runStatus = false;}   //	override base class
->>>>>>> Version089Changes
 
 	extraSaveData {
 		var dataAsPairs;
@@ -835,20 +687,10 @@ TXGameTrak : TXModuleBase {
 		if (dataAsPairs.notNil, {
 			data.putPairs(dataAsPairs);
 		});
-<<<<<<< HEAD
-		this.reconnect;
-		this.setCalibrationOff;
-	}
-
-	deleteModuleExtraActions {
-		this.hidDeactivate;
-	}
-=======
 		this.setCalibrationOff;
 		//this.reconnect;
 	}
 
->>>>>>> Version089Changes
 
 }
 

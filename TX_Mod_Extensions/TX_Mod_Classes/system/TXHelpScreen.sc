@@ -17,11 +17,7 @@ TXHelpScreen {
 		classData.imageIndex = 0;
 	}
 
-<<<<<<< HEAD
-	*open{ arg winColour, inLeft=50, inTop=500;
-=======
 	*open{ arg winColour, inLeft=50, inTop=300;
->>>>>>> Version089Changes
 		var b,c,d,e,f,g,h,i, j, k, t, u;
 		var arrInfoLinesHeight, imagePath;
 
@@ -72,17 +68,6 @@ TXHelpScreen {
 
 				b = Button(classData.window, Rect(0,0, 20, 24));
 				b.states = [["x ", Color.green(0.5), Color.white]];
-<<<<<<< HEAD
-				b.action = {t.string = "";};
-
-				b = Button(classData.window, Rect(0,0, 36, 24));
-				b.states = [["Next ", Color.green(0.5), Color.white]];
-				b.action = {classData.webView.findText(t.string)};
-
-				b = Button(classData.window, Rect(0,0, 36, 24));
-				b.states = [["Prev ", Color.green(0.5), Color.white]];
-				b.action = {classData.webView.findText(t.string, true)};
-=======
 				b.action = {t.string = ""; classData.webView.findText("x3_vz")};
 
 				b = Button(classData.window, Rect(0,0, 36, 24));
@@ -92,7 +77,6 @@ TXHelpScreen {
 				b = Button(classData.window, Rect(0,0, 36, 24));
 				b.states = [["Prev ", Color.green(0.5), Color.white]];
 				b.action = {if (t.string.size > 0, {classData.webView.findText(t.string, true)})};
->>>>>>> Version089Changes
 
 				classData.window.view.decorator.shift(26,0);
 
