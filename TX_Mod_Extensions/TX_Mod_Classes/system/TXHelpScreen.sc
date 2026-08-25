@@ -43,11 +43,11 @@ TXHelpScreen {
 				classData.window.view.decorator.nextLine;
 				e = Button(classData.window, Rect(0,0, 25, 24));
 				e.states = [["< ", Color.white, TXColor.sysGuiCol1]];
-				e.action = {classData.webView.back };
+				e.action = {if (classData.webView.notNil, {classData.webView.back})};
 
 				f = Button(classData.window, Rect(0,0, 25, 24));
 				f.states = [["> ", Color.white, TXColor.sysGuiCol1]];
-				f.action = {classData.webView.forward};
+				f.action = {if (classData.webView.notNil, {classData.webView.forward})};
 
 				classData.window.view.decorator.shift(20,0);
 
@@ -64,19 +64,19 @@ TXHelpScreen {
 				u.background_(Color.white);
 
 				t = TextField(classData.window, Rect(0,0, 125, 24));
-				t.action = {classData.webView.findText(t.string)};
+				t.action = {if (classData.webView.notNil, {classData.webView.findText(t.string)})};
 
 				b = Button(classData.window, Rect(0,0, 20, 24));
 				b.states = [["x ", Color.green(0.5), Color.white]];
-				b.action = {t.string = ""; classData.webView.findText("x3_vz")};
+				b.action = {t.string = ""; if (classData.webView.notNil, {classData.webView.findText("x3_vz")})};
 
 				b = Button(classData.window, Rect(0,0, 36, 24));
 				b.states = [["Next ", Color.green(0.5), Color.white]];
-				b.action = {if (t.string.size > 0, {classData.webView.findText(t.string)})};
+				b.action = {if (t.string.size > 0 and: {classData.webView.notNil}, {classData.webView.findText(t.string)})};
 
 				b = Button(classData.window, Rect(0,0, 36, 24));
 				b.states = [["Prev ", Color.green(0.5), Color.white]];
-				b.action = {if (t.string.size > 0, {classData.webView.findText(t.string, true)})};
+				b.action = {if (t.string.size > 0 and: {classData.webView.notNil}, {classData.webView.findText(t.string, true)})};
 
 				classData.window.view.decorator.shift(26,0);
 
@@ -138,18 +138,25 @@ TXHelpScreen {
 
 				classData.window.view.decorator.nextLine.shift(0, 5);
 
-				classData.webView = WebView(classData.window, Rect(0,0, classData.webViewWidth, 530));
-				// classData.webView.onLoadFailed = {arg view;("Failed to load URL: " ++ view.url.asString).postln;};
-				classData.webView.onLoadFinished = {arg view;
-					var holdString = view.url.asString;
-					holdString = holdString.asPathName.fileNameWithoutExtension;
-					holdString = holdString.replace("TX_0", "").replace("TX_", "");
-					holdString = holdString.replace("_", " ");
-					classData.helpNameView.string = holdString;
-					this.openImageForName(holdString);
-				};
-				//classData.webView.onLinkActivated = {arg view, url; classData.helpNameView.string = url.asString; classData.webView.url = url};
-				classData.webView.resize_(4);
+				classData.webViewAvailable = true;
+				{
+					classData.webView = WebView(classData.window, Rect(0,0, classData.webViewWidth, 530));
+					// classData.webView.onLoadFailed = {arg view;("Failed to load URL: " ++ view.url.asString).postln;};
+					classData.webView.onLoadFinished = {arg view;
+						classData.helpNameView.string = this.deriveHelpTitle(view.url.asString);
+						this.openImageForName(classData.helpNameView.string);
+					};
+					//classData.webView.onLinkActivated = {arg view, url; classData.helpNameView.string = url.asString; classData.webView.url = url};
+					classData.webView.resize_(4);
+				}.try({arg error;
+					// on this system's Qt build 'QtCollider::WebView' isn't available at all
+					// (e.g. SuperCollider was built/packaged without QtWebEngine) - fall back
+					// to opening help pages in the user's normal web browser instead.
+					("TX Modular Help: embedded browser unavailable (" ++ error.class.name
+						++ ") - help pages will open in your default web browser instead.").warn;
+					classData.webViewAvailable = false;
+					classData.webView = nil;
+				});
 
 				classData.window.view.decorator.shift(10,0);
 				classData.imageScrollView = ScrollView(classData.window, Rect(0,0, classData.imageViewWidth, 530));
@@ -171,8 +178,9 @@ TXHelpScreen {
 	}
 
 	*goToIndex {arg indexString = "/TX_Mod_Help/TX_0 TX Modular Help.html";
+		var holdString = this.class.filenameSymbol.asString.dirname ++ indexString;
 		{
-			classData.webView.url = this.class.filenameSymbol.asString.dirname ++ indexString;
+			this.showHelpPath(holdString);
 			classData.imageIndex = 0;
 			classData.imageNamePopUp.value = 0;
 			this.updateImageView;
@@ -185,7 +193,7 @@ TXHelpScreen {
 			this.open(inLeft: inLeft, inTop: inTop);
 			holdString = this.class.filenameSymbol.asString.dirname ++ "/TX_Mod_Help/" ++ helpFileName ++ ".html";
 			//("Opening Help File: " ++ holdString).postln;
-			classData.webView.url = holdString;
+			this.showHelpPath(holdString);
 			this.openImageForName(helpFileName);
 		}.defer;
 	}
@@ -196,7 +204,7 @@ TXHelpScreen {
 			this.open(inLeft: inLeft, inTop: inTop);
 			holdString = filePath;
 			//("Opening Help File: " ++ holdString).postln;
-			classData.webView.url = holdString;
+			this.showHelpPath(holdString);
 			//this.openImageForName(xxx);
 		}.defer;
 	}
@@ -207,9 +215,23 @@ TXHelpScreen {
 			this.open(inLeft: inLeft, inTop: inTop);
 			holdString = this.class.filenameSymbol.asString.dirname ++ "/TX_Mod_Help/Modules/" ++ moduleName ++ ".html";
 			//("Opening Help File: " ++ holdString).postln;
-			classData.webView.url = holdString;
+			this.showHelpPath(holdString);
 			this.openImageForName(moduleName);
 		}.defer;
+	}
+
+	*showHelpPath {arg holdString;		// display a help URL in the embedded WebView, or the system browser if unavailable
+		if (classData.webViewAvailable == true, {
+			classData.webView.url = holdString;
+		}, {
+			holdString.openOS;
+			classData.helpNameView.string = this.deriveHelpTitle(holdString);
+		});
+	}
+
+	*deriveHelpTitle {arg urlOrPath;
+		^urlOrPath.asPathName.fileNameWithoutExtension
+			.replace("TX_0", "").replace("TX_", "").replace("_", " ");
 	}
 
 	*updateImageView {
@@ -262,9 +284,11 @@ TXHelpScreen {
 				view.bounds = holdBounds;
 			});
 			// adjust webView
-			holdBounds = classData.webView.bounds;
-			holdBounds.width = holdBounds.width + 200;
-			classData.webView.bounds = holdBounds;
+			if (classData.webView.notNil, {
+				holdBounds = classData.webView.bounds;
+				holdBounds.width = holdBounds.width + 200;
+				classData.webView.bounds = holdBounds;
+			});
 			// adjust imageScrollView
 			holdBounds = classData.imageScrollView.bounds;
 			holdBounds.width = (holdBounds.width - 200).max(1);
@@ -285,9 +309,11 @@ TXHelpScreen {
 				view.bounds = holdBounds;
 			});
 			// adjust webView
-			holdBounds = classData.webView.bounds;
-			holdBounds.width = (holdBounds.width - 200).max(1);
-			classData.webView.bounds = holdBounds;
+			if (classData.webView.notNil, {
+				holdBounds = classData.webView.bounds;
+				holdBounds.width = (holdBounds.width - 200).max(1);
+				classData.webView.bounds = holdBounds;
+			});
 			// adjust imageScrollView
 			holdBounds = classData.imageScrollView.bounds;
 			holdBounds.width = holdBounds.width + 200;
